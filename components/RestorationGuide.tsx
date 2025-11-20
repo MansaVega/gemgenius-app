@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { X, Github, Rocket, Key, CheckCircle, ArrowRight } from 'lucide-react';
+import { X, Github, Key, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
 
 interface RestorationGuideProps {
   isOpen: boolean;
@@ -24,10 +25,10 @@ const RestorationGuide: React.FC<RestorationGuideProps> = ({ isOpen, onClose }) 
           <div className="border-b border-neutral-700 pb-6 mb-8">
             <h2 className="text-3xl font-serif font-bold text-[#e6dac3] mb-2 flex items-center gap-3">
               <Github className="text-[#e6dac3]" />
-              Tutoriel de Déploiement
+              Guide de Mise en Ligne
             </h2>
             <p className="text-stone-400 font-light">
-              Suivez ces étapes simples pour mettre votre application en ligne gratuitement et de manière professionnelle.
+              Suivez ces étapes pour corriger l'écran blanc ou mettre à jour votre application.
             </p>
           </div>
 
@@ -38,13 +39,13 @@ const RestorationGuide: React.FC<RestorationGuideProps> = ({ isOpen, onClose }) 
               <div className="absolute -left-[9px] top-0 bg-neutral-900 p-1">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#e6dac3]"></div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-4">1. Téléchargement</h3>
+              <h3 className="text-xl font-bold text-white mb-4">1. Téléchargement des correctifs</h3>
               <div className="bg-neutral-800/40 p-5 rounded-sm border border-neutral-700/50">
                 <p className="text-stone-300 mb-2">
                   En haut à droite de cette fenêtre (Google AI Studio), cliquez sur le petit bouton <strong>Download</strong> (flèche vers le bas).
                 </p>
                 <p className="text-sm text-stone-500">
-                  Cela va créer un fichier ZIP ou un dossier sur votre ordinateur. Ouvrez ce dossier pour voir les fichiers (App.tsx, package.json, etc.).
+                  Cela va créer un dossier sur votre ordinateur. Ouvrez ce dossier.
                 </p>
               </div>
             </div>
@@ -55,35 +56,29 @@ const RestorationGuide: React.FC<RestorationGuideProps> = ({ isOpen, onClose }) 
                 <div className="w-2.5 h-2.5 rounded-full bg-[#e6dac3]"></div>
               </div>
               <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                2. Création sur GitHub <span className="text-xs bg-[#e6dac3] text-neutral-900 px-2 py-0.5 rounded-full uppercase font-bold tracking-wide">Important</span>
+                2. Mise à jour sur GitHub
               </h3>
               
               <div className="space-y-4 text-stone-300">
                 <div className="flex gap-4 items-start">
                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-neutral-800 border border-neutral-600 flex items-center justify-center text-xs font-bold">1</span>
-                   <p>Créez un compte sur <a href="https://github.com" target="_blank" className="text-[#e6dac3] underline hover:text-white">github.com</a> (si ce n'est pas déjà fait).</p>
+                   <p>Allez sur votre projet GitHub (ex: <code>github.com/votre-pseudo/idris-app</code>).</p>
                 </div>
                 <div className="flex gap-4 items-start">
                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-neutral-800 border border-neutral-600 flex items-center justify-center text-xs font-bold">2</span>
-                   <p>En haut à droite, cliquez sur le <strong>+</strong> puis <strong>New repository</strong>.</p>
-                </div>
-                <div className="flex gap-4 items-start">
-                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-neutral-800 border border-neutral-600 flex items-center justify-center text-xs font-bold">3</span>
-                   <p>Nommez-le <code>idris-app</code> (ou autre), cochez "Public", puis cliquez sur le bouton vert <strong>Create repository</strong>.</p>
+                   <p>Cliquez sur le bouton gris <strong>Add file</strong> puis <strong>Upload files</strong>.</p>
                 </div>
                 
                 <div className="bg-stone-800 p-4 mt-2 border-l-4 border-[#e6dac3]">
                    <p className="font-bold text-white mb-2 flex items-center gap-2">
                      <ArrowRight size={16} className="text-[#e6dac3]" />
-                     L'étape clé : Mettre vos fichiers
+                     Action critique
                    </p>
                    <ul className="list-disc list-inside text-sm space-y-1 text-stone-300">
-                     <li>Sur la page qui s'affiche après la création, cliquez sur le lien bleu <strong>uploading an existing file</strong>.</li>
-                     <li>Ouvrez votre dossier téléchargé sur votre ordinateur.</li>
-                     <li><strong>Sélectionnez TOUS les fichiers</strong> à l'intérieur.</li>
-                     <li><strong>Glissez-les</strong> dans la zone grise sur GitHub.</li>
-                     <li>Attendez que les barres de chargement finissent.</li>
-                     <li>En bas, cliquez sur le bouton vert <strong>Commit changes</strong>.</li>
+                     <li>Prenez <strong>TOUS</strong> les fichiers du dossier que vous venez de télécharger.</li>
+                     <li>Glissez-les dans la page GitHub.</li>
+                     <li>Attendez que les fichiers chargent.</li>
+                     <li>Cliquez sur le bouton vert <strong>Commit changes</strong> en bas.</li>
                    </ul>
                 </div>
               </div>
@@ -95,16 +90,11 @@ const RestorationGuide: React.FC<RestorationGuideProps> = ({ isOpen, onClose }) 
                 <div className="w-2.5 h-2.5 rounded-full bg-[#e6dac3]"></div>
               </div>
               <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                3. Connexion à Netlify
+                3. Netlify (Automatique)
               </h3>
               <div className="space-y-3 text-stone-300">
-                 <p>Allez sur <a href="https://netlify.com" target="_blank" className="text-[#e6dac3] underline hover:text-white">netlify.com</a> et inscrivez-vous (vous pouvez utiliser votre compte GitHub).</p>
-                 <ul className="space-y-2 list-none">
-                   <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500"/> Cliquez sur <strong>Add new site</strong> {'>'} <strong>Import from existing project</strong>.</li>
-                   <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500"/> Choisissez <strong>GitHub</strong>.</li>
-                   <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500"/> Sélectionnez votre projet <code>idris-app</code> dans la liste.</li>
-                   <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500"/> Cliquez sur <strong>Deploy idris-app</strong> (laissez les réglages par défaut).</li>
-                 </ul>
+                 <p>Une fois les fichiers mis sur GitHub, Netlify va détecter le changement et reconstruire le site.</p>
+                 <p className="text-sm text-[#e6dac3]">Cela prend environ 1 à 2 minutes. Rafraîchissez votre site Netlify après ce délai.</p>
               </div>
             </div>
 
@@ -115,23 +105,53 @@ const RestorationGuide: React.FC<RestorationGuideProps> = ({ isOpen, onClose }) 
               </div>
               <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <Key size={20} className="text-[#e6dac3]" />
-                4. Activer l'Intelligence Artificielle
+                4. Configuration Netlify (Crucial)
               </h3>
               <div className="bg-neutral-800/60 p-5 border border-neutral-700 rounded-sm">
                 <p className="text-stone-300 mb-4">
-                  Pour que l'app puisse générer les descriptions, vous devez donner votre clé secrète à Netlify.
+                  Sur Netlify, allez dans <strong>Site configuration</strong> {'>'} <strong>Environment variables</strong>.
+                  Si vous avez déjà une variable, supprimez-la et recréez-la comme ceci :
                 </p>
-                <ol className="list-decimal list-inside space-y-2 text-stone-400 text-sm">
-                  <li>Sur Netlify, allez dans <strong>Site configuration</strong> (menu de gauche).</li>
-                  <li>Cliquez sur <strong>Environment variables</strong>.</li>
-                  <li>Cliquez sur <strong>Add a variable</strong>.</li>
-                  <li>Key : <code className="text-white font-bold">API_KEY</code></li>
-                  <li>Value : (Copiez votre clé Google AI Studio commençant par AIza...)</li>
-                  <li>Cliquez sur <strong>Create variable</strong>.</li>
-                </ol>
-                <p className="mt-4 text-[#e6dac3] text-sm italic">
-                  C'est fini ! Votre site est en ligne et fonctionnel.
-                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                  
+                  {/* BOITE 1 */}
+                  <div className="relative bg-stone-900 p-4 rounded border border-stone-600 ring-2 ring-[#e6dac3]">
+                    <div className="absolute -top-3 left-3 bg-[#e6dac3] text-stone-900 text-[10px] font-bold px-2 py-0.5 uppercase tracking-widest">
+                      Case "Key" (Le Nom)
+                    </div>
+                    <div className="text-center mt-2">
+                        <span className="block text-2xl font-black text-white tracking-wider">API_KEY</span>
+                        <span className="text-xs text-stone-500 font-bold mt-1">
+                            ⚠️ Écrire EXACTEMENT ça
+                        </span>
+                    </div>
+                  </div>
+
+                  {/* BOITE 2 */}
+                  <div className="relative bg-stone-900 p-4 rounded border border-stone-600">
+                    <div className="absolute -top-3 left-3 bg-stone-600 text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-widest">
+                      Case "Value" (Le Secret)
+                    </div>
+                     <div className="text-center mt-2">
+                        <span className="block text-sm font-mono text-stone-300 break-all">AIzaSy...</span>
+                        <span className="text-xs text-stone-500 block mt-1">(Collez votre longue clé ici)</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="mt-4 flex justify-center">
+                    <a 
+                    href="https://aistudio.google.com/app/apikey" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-[#e6dac3] hover:text-white font-bold underline text-sm"
+                    >
+                    <ExternalLink size={14} />
+                    Récupérer ma clé AIza... ici
+                    </a>
+                </div>
+
               </div>
             </div>
 
@@ -142,7 +162,7 @@ const RestorationGuide: React.FC<RestorationGuideProps> = ({ isOpen, onClose }) 
               onClick={onClose}
               className="px-10 py-4 bg-[#e6dac3] hover:bg-white text-neutral-900 font-bold uppercase tracking-widest text-sm transition-all rounded-sm shadow-lg hover:shadow-xl hover:scale-105"
             >
-              J'ai compris, je me lance !
+              Fermer le guide
             </button>
           </div>
         </div>

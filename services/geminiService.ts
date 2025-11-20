@@ -1,17 +1,42 @@
-
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize the client
-// Ensure API Key is available
-const apiKey = process.env.API_KEY || ''; 
-const ai = new GoogleGenAI({ apiKey });
+// Déclaration pour TypeScript de la variable injectée par Vite
+declare const __APP_API_KEY__: string;
+
+// Récupération robuste de la clé API
+// 1. __APP_API_KEY__ : Injecté par vite.config.ts (Priorité absolue)
+// 2. process.env.API_KEY : Fallback standard
+const getApiKey = (): string => {
+  // Vérification de la variable injectée par Vite (Hard Injection)
+  if (typeof __APP_API_KEY__ !== 'undefined' && __APP_API_KEY__) {
+    return __APP_API_KEY__;
+  }
+  // Fallback process.env (Node/Standard)
+  if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+    return process.env.API_KEY;
+  }
+  return '';
+};
+
+const API_KEY = getApiKey();
+
+// LOG DE DÉBOGAGE (Apparaît dans la console F12)
+console.log(
+  "%c🔑 CONFIGURATION API", 
+  "background: #000; color: #e6dac3; padding: 4px; font-weight: bold;",
+  API_KEY ? `Clé détectée (longueur: ${API_KEY.length})` : "❌ CLÉ MANQUANTE"
+);
+
+// Initialisation du client.
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const generateGemstoneDescription = async (gemData: any): Promise<string> => {
-  try {
-    if (!apiKey) {
-      throw new Error("Clé API manquante. Si vous avez déployé l'app, assurez-vous d'avoir configuré la variable d'environnement 'API_KEY'.");
-    }
+  if (!API_KEY) {
+    console.error("❌ ERREUR CRITIQUE : Clé API manquante dans le navigateur.");
+    throw new Error("Clé API manquante. Vérifiez la configuration Netlify (Key: API_KEY, Value: AIza...).");
+  }
 
+  try {
     const model = 'gemini-2.5-flash';
     
     const prompt = `
@@ -173,11 +198,9 @@ export const generateGemstoneDescription = async (gemData: any): Promise<string>
 };
 
 export const sendMessageToGemini = async (message: string, history: any[]): Promise<string> => {
+  if (!API_KEY) return "Erreur: Clé API manquante. Vérifiez la configuration.";
+  
   try {
-    if (!apiKey) {
-      throw new Error("Clé API manquante. Vérifiez la variable d'environnement API_KEY.");
-    }
-
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',
       history: history,
