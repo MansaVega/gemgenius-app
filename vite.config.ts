@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react'
 // Configuration pour React avec support des variables d'environnement Netlify
 export default defineConfig(({ mode }) => {
   // Charge les variables d'environnement (support local .env et système)
-  // On utilise '.' pour le répertoire courant
   const env = loadEnv(mode, '.', '');
   
   // RÉCUPÉRATION PRIORITAIRE DE LA CLÉ
@@ -27,11 +26,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     define: {
       // INJECTION DIRECTE : On crée une variable globale disponible dans le navigateur
-      // Cela contourne les problèmes fréquents avec 'process.env'
-      '__APP_API_KEY__': JSON.stringify(apiKey),
+      '__APP_API_KEY__': JSON.stringify(apiKey)
       
-      // Polyfill minimal pour éviter les crashs de librairies tierces
-      'process.env': {}
+      // J'ai retiré 'process.env': {} car cela peut bloquer le post-processing Netlify
     }
   }
 })
