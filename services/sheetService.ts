@@ -8,17 +8,32 @@ export interface GemData {
   [key: string]: string;
 }
 
+// 🚀 CACHE GLOBAL : Stocke les données après le premier chargement
+// Cela rend les recherches suivantes quasi-instantanées.
+let cachedGemData: GemData[] | null = null;
+
 export const findGemstoneByReference = async (reference: string): Promise<GemData | null> => {
   try {
-    console.log(`Récupération des données...`);
-    const response = await fetch(CSV_URL);
-    
-    if (!response.ok) {
-      throw new Error(`Erreur de connexion à la base de données (Status: ${response.status})`);
+    let data = cachedGemData;
+
+    // Si pas de cache, on télécharge (lent la première fois)
+    if (!data) {
+      console.log(`📡 Téléchargement de la base de données (Ceci ne se fait qu'une seule fois)...`);
+      const response = await fetch(CSV_URL);
+      
+      if (!response.ok) {
+        throw new Error(`Erreur de connexion à la base de données (Status: ${response.status})`);
+      }
+      
+      const text = await response.text();
+      data = parseCSV(text);
+      
+      // Mise en cache pour la suite
+      cachedGemData = data;
+      console.log(`✅ Base de données mise en cache (${data.length} entrées)`);
+    } else {
+       console.log(`⚡ Utilisation du cache mémoire (Rapide)`);
     }
-    
-    const text = await response.text();
-    const data = parseCSV(text);
     
     if (data.length === 0) return null;
 

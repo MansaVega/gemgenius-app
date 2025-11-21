@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 
 // Déclaration pour TypeScript de la variable injectée par Vite
@@ -43,146 +44,123 @@ export const generateGemstoneDescription = async (gemData: any): Promise<string>
       Actúa como un experto gemólogo y asistente de inventario para subastas de alta joyería.
       Genera una ficha técnica precisa EN ESPAÑOL para la gema basada en los datos proporcionados (JSON).
 
+      ⛔️ PROHIBIDO ESTRICTAMENTE:
+      - NO saludar.
+      - NO poner introducciones como "¡Excelente elección!" o "Aquí tienes la ficha".
+      - NO poner frases de cierre.
+      - NO inventar datos no presentes en el JSON.
+      - SOLO entrega el bloque de texto de la ficha técnica.
+
       ---------------------------------------------------------
       DATOS DE LA GEMA (JSON)
       ---------------------------------------------------------
       ${JSON.stringify(gemData, null, 2)}
 
       ---------------------------------------------------------
-      REGLAS CRÍTICAS PARA EL TÍTULO (Línea 💎)
+      ⚠️ REGLAS CRÍTICAS (NO IGNORAR) ⚠️
       ---------------------------------------------------------
-      Analiza el valor de la columna "Qté" (o "Qty" / "Quantity"):
-
-      🔴 REGLA DE CANTIDAD 1 (PAR): 
-      SI "Qté" es "2" (Número o Texto):
-      - El título DEBE comenzar con: "PAR DE"
-      - El nombre de la gema debe estar en PLURAL (ej. RUBÍES, ZAFIROS).
-      - Ejemplo: 💎 PAR DE RUBÍES NATURALES DE MADAGASCAR
-
-      🔴 REGLA DE CANTIDAD 2 (LOTE): 
-      SI "Qté" es mayor o igual a "3":
-      - El título DEBE comenzar con: "LOTE DE [Valor Qté]"
-      - El nombre de la gema debe estar en PLURAL.
-      - Ejemplo: 💎 LOTE DE 5 ZAFIROS NATURALES DE CEILÁN
-
-      🔴 REGLA DE CANTIDAD 3 (INDIVIDUAL): 
-      SI "Qté" es "1", "0", vacío o no existe:
-      - Usa el formato singular estándar.
-      - Ejemplo: 💎 ZAFIRO AZUL NATURAL DE MADAGASCAR
-
-      REGLAS DE TERMINOLOGÍA EN EL TÍTULO:
-      1. Todo en MAYÚSCULAS.
-
-      2. REGLA DE TAMAÑO (GRANDE):
-         Analiza el campo "Dimensions". Busca números en mm.
-         SI CUALQUIER dimensión es mayor o igual a 10 mm (>= 10.0):
-         - La gema se clasifica como "GRANDE".
-
-      3. REGLA ESPECIAL GRANATE CAMBIO DE COLOR (PRIORIDAD):
-         Analiza si la gema es un "Grenat" (Granate) y si el campo "Variety" o "Shape" menciona "Changement de Couleur" o "Color Change".
-         SI SE CUMPLE:
-         - EL TÍTULO DEBE COMENZAR CON LA PALABRA "RARO" (justo después de "PAR DE" o "LOTE DE" si aplica, o al inicio absoluto si es individual).
-         - El nombre de la gema debe escribirse como "GRANATE CAMBIO DE COLOR".
-         - Ejemplo: RARO GRANATE CAMBIO DE COLOR DE [ORIGEN] SIN TRATAMIENTO.
-
-      4. REGLA ESPECIAL ZAFIRO ROSA:
-         Analiza si la gema es un "Saphir" (Zafiro).
-         SI el campo "Color" contiene "Rose", "Pink" o combinaciones (ej. "Rose Pourpre"):
-         - EL NOMBRE DE LA GEMA EN EL TÍTULO DEBE SER "ZAFIRO ROSA".
-         - Ejemplo: ZAFIRO ROSA NATURAL DE MADAGASCAR.
-
-      5. Si es NATURAL:
-         - Debe incluir la palabra "NATURAL" (o NATURALES).
-         - SI ES GRANDE (>= 10mm):
-           * Agrega "GRANDE" (o GRANDES) justo antes del nombre de la gema.
-           * Ejemplo: GRANDE RUBÍ NATURAL DE MADAGASCAR.
-         - Debe incluir el ORIGEN geográfico (ej. "DE COLOMBIA").
-         - REGLA DE NO TRATAMIENTO:
-           Analiza el campo "Treatment" (o "Commentaire").
-           SI NO HAY TRATAMIENTO (None, Unheated, No treatment, Aucun, etc.):
-           * AÑADE "SIN TRATAMIENTO" después del origen.
-           * Ejemplo: GRANDE RUBÍ NATURAL DE MADAGASCAR SIN TRATAMIENTO.
-
-      6. Si es DE LABORATORIO (Sintético/Lab grown/Hydrothermal/Cultivo):
-         - Incluye OBLIGATORIAMENTE "DE CULTIVO".
-         - OBLIGATORIO: INCLUYE LA FRASE "SIN TRATAMIENTO" después de "DE CULTIVO".
-         - NO incluyas el origen geográfico.
-         - ADJETIVOS INICIALES (IMPORTANTE: CONCORDANCIA DE GÉNERO):
-           * Determina el género gramatical de la gema en español:
-             - MASCULINO (Usa "FINO"): ZAFIRO, RUBÍ, GRANATE, DIAMANTE, ÓPALO, TOPACIO, PERIDOTO, CUARZO.
-               -> EJEMPLO: "FINO ZAFIRO" (Nunca 'Fina Zafiro').
-             - FEMENINO (Usa "FINA"): ESMERALDA, TURMALINA, ESPINELA, AMATISTA, AGUAMARINA, TANZANITA.
-               -> EJEMPLO: "FINA ESMERALDA".
-           * Si NO es GRANDE (< 10mm):
-             - MASCULINO: Usa "FINO" (ej. FINO ZAFIRO...).
-             - FEMENINO: Usa "FINA" (ej. FINA ESMERALDA...).
-             - PLURALES: "FINOS" o "FINAS".
-           * Si ES GRANDE (>= 10mm):
-             - MASCULINO: Usa "FINO Y GRANDE" (ej. FINO Y GRANDE ZAFIRO...).
-             - FEMENINO: Usa "FINA Y GRANDE" (ej. FINA Y GRANDE ESMERALDA...).
-             - PLURALES: "FINOS Y GRANDES" o "FINAS Y GRANDES".
-
-      7. REGLA DE CERTIFICADO (MUY IMPORTANTE - AL FINAL DEL TÍTULO):
-         Analiza el campo "Certificate", "Certificat" o "Report".
-         SI existe un certificado válido (ej. GIA, AGL, GRS, IGI, LOTUS, etc.) y NO es "None", "No", "N/A", "Sin certificado" o vacío:
-         - AÑADE "CON CERTIFICADO [NOMBRE DEL CERTIFICADO]" AL FINAL ABSOLUTO DEL TÍTULO.
-         - Ejemplo: FINA ESMERALDA DE CULTIVO SIN TRATAMIENTO CON CERTIFICADO AGL
-         - Ejemplo: ZAFIRO NATURAL DE CEILÁN CON CERTIFICADO GIA
+      1. EL TÍTULO DEBE ESTAR SIEMPRE EN MAYÚSCULAS.
+      2. EL TÍTULO DEBE ESTAR ENVUELTO EN ASTERISCOS (*) PARA QUE SALGA EN NEGRITA.
+         Ejemplo: 💎 *LOTE DE 5 ZAFIROS*
+      3. EL PRECIO DEBE ESTAR ENVUELTO EN ASTERISCOS (*).
+         Ejemplo: 📌 *Precio inicial: 100€*
+         ⚠️ SI NO HAY PRECIO O ES 0: DEJA EL ESPACIO DESPUÉS DE LOS DOS PUNTOS VACÍO.
+         ⛔️ NUNCA escribas "No disponible", "Consultar" o "N/A".
+         ✅ Correcto si no hay precio: 📌 *Precio inicial:*
+      4. PLURALES OBLIGATORIOS: SI LA CANTIDAD > 1, AÑADE SIEMPRE "S" o "ES".
+         Ejemplo: ZAFIROS, RUBÍES, NEGROS, GRANDES, FINOS.
 
       ---------------------------------------------------------
-      REGLAS DE CONTENIDO ESPECÍFICO
+      CONSTRUCCIÓN DEL TÍTULO (Línea 💎)
       ---------------------------------------------------------
-      💰 PRECIO (REGLA ESTRICTA):
-      - Busca el campo "Prix Vente" o "Price" en el JSON.
-      - SIEMPRE DEBES INCLUIR LA LÍNEA "📌 Precio inicial:".
-      - LÓGICA DE VALOR:
-        * CASO 1: SI el precio EXISTE Y ES MAYOR A 0 (ej. "1500", "250"):
-          -> ESCRIBE: "📌 Precio inicial: [Valor]"
-        * CASO 2: SI el precio es 0, "0", Vacío, Null, "None", o No existe:
-          -> ESCRIBE: "📌 Precio inicial:" (DÉJALO VACÍO DESPUÉS DE LOS DOS PUNTOS, NO PONGAS NADA MÁS).
+      Orden estricto:
+      [PREFIJO CANTIDAD] + [ADJETIVO CALIDAD] + [NOMBRE GEMA] + [COLOR] + [CLARIDAD] + [NATURAL] + [ORIGEN] + [TRATAMIENTO] + [CERTIFICADO]
+
+      1. PREFIJO CANTIDAD:
+         - Qté == 2: "PAR DE "
+         - Qté >= 3: "LOTE DE [Qté] "
+         - Qté == 1: "" (Vacío)
+
+      2. GRAMÁTICA Y PLURALES (¡MUY IMPORTANTE!):
+         - Si Qté > 1: TODO DEBE IR EN PLURAL.
+         - ZAFIRO -> ZAFIROS
+         - RUBÍ -> RUBÍES
+         - ESMERALDA -> ESMERALDAS
+         - NEGRO -> NEGROS
+         - FINO -> FINOS
+
+      3. ADJETIVO CALIDAD (FINO / FINA):
+         - "High Clarity" = Clarity contiene "VS", "VVS", "IF", "FL".
+         - "Grande" = Alguna dimensión >= 10mm.
+         
+         - Si High Clarity Y Grande: "FINA Y GRANDE " (o FINOS Y GRANDES)
+         - Si High Clarity: "FINA " (o FINOS)
+         - Si Grande: "GRANDE " (o GRANDES)
+         - Si nada: Nada.
+         
+         * Género Masculino: Zafiro, Rubí, Granate, Diamante, Ópalo, Topacio, Peridoto, Cuarzo.
+         * Género Femenino: Esmeralda, Turmalina, Espinela, Amatista, Aguamarina, Tanzanita, Moissanita.
+
+      4. NOMBRE GEMA:
+         - EN MAYÚSCULAS.
+         - Si es "Granate" y "Color Change" -> "RARO GRANATE CAMBIO DE COLOR".
+         - TRADUCCIÓN ESPECÍFICA: "MYSTIQUE" -> "MÍSTICO" (Ej. TOPACIO MÍSTICO).
+
+      5. REGLA COLOR NEGRO (OBLIGATORIA):
+         - Si el campo Color es "Black", "Noir" o "Negro":
+         - DEBES INCLUIR LA PALABRA "NEGRO" (o "NEGROS") EN EL TÍTULO.
+         - Ejemplo: "ZAFIRO NEGRO", "LOTE DE ZAFIROS NEGROS".
+
+      6. OTROS COLORES:
+         - Zafiro + Pink -> "ZAFIRO ROSA" (ZAFIROS ROSAS).
+         - Diamante/Moissanita -> Añade el Color Grade (ej. D, E, Fancy Pink).
+
+      7. CLARIDAD (SOLO SI ES HIGH CLARITY):
+         - Añade VS, VVS, IF, etc. al título.
+
+      8. PALABRA "NATURAL" (OBLIGATORIO SI ES NATURAL):
+         - Si la gema es "Naturel", "Naturelle" o "Natural":
+         - AÑADE LA PALABRA "NATURAL" DESPUÉS DE LA CLARIDAD (y antes del Origen).
+         - Si es plural (Lote), usa "NATURALES".
+         - Ejemplo: "TOPACIO MÍSTICO VVS NATURAL DE ÁFRICA".
+         - Ejemplo: "RUBÍ NATURAL DE BIRMANIA".
+         - Ejemplo Lote: "LOTE DE 5 ZAFIROS NATURALES DE CEYLAN".
+
+      9. ORIGEN Y TRATAMIENTO EN TÍTULO:
+         - Natural -> "DE [PAIS]" (ej. DE COLOMBIA).
+         - Sintético -> "DE CULTIVO".
+         - Treatment None/Unheated -> "SIN TRATAMIENTO".
+         - Treatment Heated/Calentado -> ⛔️ NO LO PONGAS EN EL TÍTULO. Omítelo del título (pero inclúyelo abajo en la línea de Tratamientos).
+         - Certificado -> "CON CERTIFICADO [NOMBRE]".
       
-      🎨 COLOR (IMPORTANTE):
-      - Si el color o descripción menciona "Cornflower":
-      - ✅ USA SIEMPRE: "AZUL CORNFLOWER" (o Cornflower Blue).
-      - ⛔ PROHIBIDO: Nunca escribas "Azul Aciano".
-
-      🧴 TRATAMIENTOS (Campo "Treatment", "Traitement" o "Commentaire"):
-      - Analiza el texto del campo.
-      - SI contiene "Berilio" o "Beryllium": Escribe EXACTAMENTE "Calentado, berilio".
-      - SI contiene "Glass", "glass filled", "Relleno", "Vidrio", "Composite", "Lead glass": Escribe EXACTAMENTE "Calentado, Glass-filled".
-      - SI contiene "Radiación", "Radiation" o "Irradiation": Escribe EXACTAMENTE "Calentado, Radiación".
-      - Para "Heated", "Calentado", "Chauffé" (sin otras menciones): Escribe "Calentado".
-      - Para "Unheated", "No treatment", "None", "Aucun", "Sin tratamiento": Escribe "Sin tratamiento".
-      - ⛔ IMPORTANTE: NUNCA escribas "Ninguno". Si no hay tratamiento, escribe SIEMPRE "Sin tratamiento".
-      - Para otros casos no especificados arriba, usa el término estándar en español.
-
-      🌍 ORIGEN:
-      - Si es NATURAL: Escribe la línea "🌍 Origen: [País/Región]" (ej. Colombia, Birmania, Ceilán).
-      - Si es CULTIVO/LABORATORIO: NO escribas la línea de origen.
-      
-      🔖 REFERENCIA:
-      - Busca el campo 'Ref', 'Reference', 'Lot', 'Lote' o 'ID' en el JSON.
-      - Debes incluirlo al final de la ficha.
+      10. REGLA PESO TOTAL (p.t.):
+          - Mira el campo "Quantity" (Qté).
+          - Si Qté > 1 (es un lote o par): La línea de peso DEBE terminar con "p.t." (por total).
+            Ejemplo: "⚖️ Peso: 4.7 ct p.t."
+          - Si Qté = 1: La línea de peso termina solo en "ct".
+            Ejemplo: "⚖️ Peso: 1.2 ct"
 
       ---------------------------------------------------------
-      FORMATO VISUAL DE SALIDA (Estricto)
+      SALIDA FINAL (FORMATO ESTRICTO)
       ---------------------------------------------------------
-      ✨ Subasta [Valor de 'Ref' o 'Lot'] ✨
-      💎 [TÍTULO GENERADO SEGÚN REGLAS]
-      📌 Precio inicial: [Valor o vacío]
-      🔬 Claridad: [Clarity/Pureté traducido al español]
-      📐 Talla: [Shape/Forme traducido al español]
-      [INSERTAR AQUÍ LA LÍNEA ORIGEN SI ES NATURAL]
-      📏 Dimensiones: [Dimensions]
-      ⚖️ Peso: [Poids] ct
-      🧴 Tratamientos: [Tratamiento normalizado según reglas]
-      📄 Certificado: [Certificado o "No incluido"]
-      🔖 Ref : [Valor de 'Ref' o 'Lot']
+      Genera la ficha exactamente así, manteniendo los emojis y los asteriscos:
 
-      IMPORTANTE:
-      - No agregues saludos ni texto extra.
-      - Respeta estrictamente las mayúsculas y emojis del formato.
-      - La salida debe ser exclusivamente en ESPAÑOL.
+      ✨ Subasta [Ref] ✨
+      💎 *[AQUÍ EL TÍTULO EN MAYÚSCULAS]*
+      📌 *Precio inicial: [VACÍO SI NO EXISTE]*
+      🔬 Claridad: [Clarity]
+      [SI ES DIAMANTE/MOISSANITA: 🌟 Color Grade : [Color]]
+      📐 Corte: [Shape/Forme traducido]
+      [SI ES NATURAL: 📏 Dimensiones: [Dimensions]]
+      [SI ES NATURAL: 🌍 Origen: [Origin]]
+      [SI ES SINTETICO: 📏 Dimensiones: [Dimensions]]
+      ⚖️ Peso: [Weight] ct [AQUÍ PONER "p.t." SI QTÉ > 1]
+      🧴 Tratamientos: [Treatment (Traducido)]
+      📄 Certificado: [Certificate]
+      🔖 Ref : [Ref]
+
+      NOTA: "Talla" se traduce como "Corte". "None" en tratamiento es "Sin tratamiento".
+      ¡No olvides los asteriscos en el título y precio!
     `;
 
     const response = await ai.models.generateContent({
