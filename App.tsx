@@ -147,6 +147,7 @@ const App: React.FC = () => {
   const [reference, setReference] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [gemImage, setGemImage] = useState<string | null>(null); // État pour l'image de la gemme
   const [error, setError] = useState<string | null>(null);
   
   // Modals state
@@ -159,14 +160,10 @@ const App: React.FC = () => {
     
     const saved = localStorage.getItem('idris_logo_url');
     
-    // 🛡️ LOGIQUE DE PROTECTION DU LOGO :
-    // Si l'utilisateur a mis un logo dans le code (HARDCODED_LOGO_URL), 
-    // on l'utilise en priorité si la mémoire locale est vide.
     if (HARDCODED_LOGO_URL && (!saved || saved.trim() === '')) {
         return HARDCODED_LOGO_URL;
     }
     
-    // Sinon, on respecte le choix utilisateur (s'il existe)
     if (saved !== null) return saved;
     
     return HARDCODED_LOGO_URL;
@@ -186,12 +183,28 @@ const App: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setResult(null);
+    setGemImage(null);
 
     try {
       const gemData = await findGemstoneByReference(reference);
       
       if (!gemData) {
         throw new Error(`Aucune gemme trouvée avec la référence "${reference}" dans l'inventaire.`);
+      }
+
+      // Extraction de l'image depuis la colonne "Photos" (ou variations)
+      const photoKey = Object.keys(gemData).find(key => 
+        key.toLowerCase().includes('photo') || 
+        key.toLowerCase().includes('image') ||
+        key.toLowerCase().includes('url')
+      );
+      
+      if (photoKey && gemData[photoKey]) {
+        // Si plusieurs liens séparés par virgule, on prend le premier
+        const rawLink = gemData[photoKey].split(',')[0].trim();
+        if (rawLink) {
+          setGemImage(rawLink);
+        }
       }
 
       const description = await generateGemstoneDescription(gemData);
@@ -270,7 +283,7 @@ const App: React.FC = () => {
 
         {result && (
           <div className="animate-fade-in-up">
-            <GemCard content={result} />
+            <GemCard content={result} imageUrl={gemImage} />
           </div>
         )}
       </main>

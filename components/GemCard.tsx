@@ -1,13 +1,15 @@
 
 import React, { useState } from 'react';
-import { Copy, Check, Diamond } from 'lucide-react';
+import { Copy, Check, Diamond, ImageOff } from 'lucide-react';
 
 interface GemCardProps {
   content: string;
+  imageUrl?: string | null;
 }
 
-const GemCard: React.FC<GemCardProps> = ({ content }) => {
+const GemCard: React.FC<GemCardProps> = ({ content, imageUrl }) => {
   const [copied, setCopied] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -22,6 +24,12 @@ const GemCard: React.FC<GemCardProps> = ({ content }) => {
         }
         return trimmed;
       });
+      
+      // Add Image URL at the bottom if exists
+      if (imageUrl) {
+        plainParts.push(`\n📷 Photo: ${imageUrl}`);
+      }
+
       const plainContent = plainParts.filter(l => l).join('\n');
 
       // 2. Generate HTML (for Word, Email)
@@ -33,6 +41,12 @@ const GemCard: React.FC<GemCardProps> = ({ content }) => {
         }
         return trimmed;
       });
+
+      // Add Image HTML
+      if (imageUrl) {
+        htmlParts.push(`<br><br><img src="${imageUrl}" alt="Gema" width="200" /><br><a href="${imageUrl}">Ver Foto</a>`);
+      }
+
       const htmlContent = htmlParts.filter(l => l).join('<br>');
 
       const textBlob = new Blob([plainContent], { type: 'text/plain' });
@@ -61,6 +75,8 @@ const GemCard: React.FC<GemCardProps> = ({ content }) => {
             }
             return trimmed;
         });
+        if (imageUrl) plainParts.push(`\n📷 Photo: ${imageUrl}`);
+        
         await navigator.clipboard.writeText(plainParts.filter(l => l).join('\n'));
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -145,6 +161,23 @@ const GemCard: React.FC<GemCardProps> = ({ content }) => {
           )}
         </button>
       </div>
+      
+      {/* Optional Image Section */}
+      {imageUrl && !imageError && (
+        <div className="w-full h-64 bg-stone-100 relative overflow-hidden border-b border-stone-200 group">
+          <img 
+            src={imageUrl} 
+            alt="Gemme" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            onError={() => setImageError(true)}
+          />
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
+             <a href={imageUrl} target="_blank" rel="noreferrer" className="text-[10px] text-white uppercase font-bold tracking-wider bg-black/50 px-2 py-1 rounded">
+               Voir taille réelle
+             </a>
+          </div>
+        </div>
+      )}
       
       <div className="p-8 bg-white font-sans">
         {renderContent()}
